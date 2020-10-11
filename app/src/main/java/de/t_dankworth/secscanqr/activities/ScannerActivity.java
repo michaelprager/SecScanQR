@@ -86,6 +86,7 @@ public class ScannerActivity extends AppCompatActivity {
     private static final SimpleDateFormat date = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
     private static final String STATE_QRCODE = MainActivity.class.getName();
     private static final String STATE_QRCODEFORMAT = "format";
+    private static final int REQUEST_CODE_SCANFILE = 0;
 
     /**
      * This method handles the main navigation
@@ -98,6 +99,9 @@ public class ScannerActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_scan:
                     zxingScan();
+                    return true;
+                case R.id.navigation_scanfile:
+                    openImagePicker();
                     return true;
                 //Following cases using a method from ButtonHandler
                 case R.id.main_action_navigation_copy:
@@ -286,6 +290,14 @@ public class ScannerActivity extends AppCompatActivity {
 
             }
         } else {
+            switch (requestCode) {
+                case REQUEST_CODE_SCANFILE:
+                    if (resultCode == RESULT_OK) {
+                        Uri uri = data.getData();
+                        handleUri(uri);
+                    }
+                    break;
+            }
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
@@ -332,6 +344,10 @@ public class ScannerActivity extends AppCompatActivity {
 
     private void handleSendPicture(){
         Uri imageUri = (Uri) getIntent().getExtras().get(Intent.EXTRA_STREAM);
+        handleUri(imageUri);
+    }
+
+    private void handleUri(Uri imageUri){
         InputStream imageStream = null;
 
         try{
@@ -403,6 +419,18 @@ public class ScannerActivity extends AppCompatActivity {
             Toast.makeText(activity, getResources().getText(R.string.error_code_not_found), Toast.LENGTH_LONG).show();
         } catch (ArrayIndexOutOfBoundsException e){
             Toast.makeText(activity, getResources().getText(R.string.error_code_not_found), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void openImagePicker() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/*");
+        try {
+            startActivityForResult(intent, REQUEST_CODE_SCANFILE);
+        }
+        catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(this, getResources().getText(R.string.error_no_file_manager), Toast.LENGTH_LONG).show();
         }
     }
 }

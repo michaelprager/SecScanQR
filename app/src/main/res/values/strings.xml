@@ -22,8 +22,10 @@
     <string name="error_add_to_database">Was not able to add QR-Code to the history</string>
     <string name="error_file_not_found">File not found</string>
     <string name="error_code_not_found">Barcode/Qr-Code not found</string>
+    <string name="error_no_file_manager">Please install a file manager</string>
     <!-- MainActivity Navigation-->
     <string name="title_scan">Scan</string>
+    <string name="title_scanfile">Scan file</string>
     <string name="title_generate">Generate</string>
     <string name="title_history">History</string>
     <!-- MainActivity Action Navigation-->
